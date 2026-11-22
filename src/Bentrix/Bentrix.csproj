@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- **BENTRIX for .NET**: the engine in your own
+       process through the C ABI (crates/bentrix-ffi, libbentrix.dll / libbentrix.so beside it or on
+       the library path), its Gym a client of the Rust environment. -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <RootNamespace>Bentrix</RootNamespace>
+    <AssemblyName>Bentrix</AssemblyName>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+</Project>
