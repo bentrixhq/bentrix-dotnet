@@ -17,6 +17,30 @@ internal static class Native
     // `libbentrix` on every platform: .NET adds the suffix (.dll, .so, .dylib).
     private const string Lib = "libbentrix";
 
+    // **Where the library is** (the installer puts it in Bentrix's own folder): the file BENTRIX_FFI names, else
+    // `libbentrix` in the folder BENTRIX_FFI_DIR names, else on Windows %LOCALAPPDATA%\Programs\BENTRIX, else
+    // .NET's own search.
+    static Native()
+    {
+        NativeLibrary.SetDllImportResolver(typeof(Native).Assembly, (name, assembly, path) =>
+        {
+            if (name != Lib) return IntPtr.Zero;
+            string file = OperatingSystem.IsWindows() ? "libbentrix.dll" : OperatingSystem.IsMacOS() ? "libbentrix.dylib" : "libbentrix.so";
+            var places = new List<string>();
+            var named = Environment.GetEnvironmentVariable("BENTRIX_FFI");
+            if (!string.IsNullOrEmpty(named)) places.Add(named);
+            var dir = Environment.GetEnvironmentVariable("BENTRIX_FFI_DIR");
+            if (!string.IsNullOrEmpty(dir)) places.Add(Path.Combine(dir, file));
+            var local = Environment.GetEnvironmentVariable("LOCALAPPDATA");
+            if (OperatingSystem.IsWindows() && !string.IsNullOrEmpty(local)) places.Add(Path.Combine(local, "Programs", "BENTRIX", file));
+            foreach (var p in places)
+            {
+                if (File.Exists(p) && NativeLibrary.TryLoad(p, out var handle)) return handle;
+            }
+            return IntPtr.Zero;
+        });
+    }
+
     [DllImport(Lib)] internal static extern IntPtr bx_version();
     [DllImport(Lib)] internal static extern IntPtr bx_last_error();
     [DllImport(Lib)] internal static extern void bx_free(IntPtr p);
