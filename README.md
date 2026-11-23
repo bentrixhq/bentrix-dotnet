@@ -8,17 +8,19 @@ The client is generated from the catalogue of the Bentrix release it came with, 
 
 ## What you need
 
-The .NET SDK (6 or later), and Bentrix open on the same computer.
+The .NET SDK 8 or later, and Bentrix open on the same computer.
 
 ## Install
 
-The client is the project `mcp/Bentrix.Mcp.csproj`. Make a console project beside a clone of this repository and reference it:
+The client is the package `Bentrix.Mcp` on NuGet:
 
 ```bash
 dotnet new console -o MyAgent
 cd MyAgent
-dotnet add reference ../bentrix-dotnet/mcp/Bentrix.Mcp.csproj
+dotnet add package Bentrix.Mcp
 ```
+
+Or from a clone of this repository, by reference: `dotnet add reference ../bentrix-dotnet/mcp/Bentrix.Mcp.csproj`.
 
 ## Connect
 
@@ -35,7 +37,13 @@ Console.WriteLine(book!["positions"]!.AsArray().Count);
 
 ## The engine in your own process
 
-`src/Bentrix` and its Gym (the in-process engine) run Bentrix's engine inside your program, with no window. The engine is Bentrix's own library, `libbentrix`, which Bentrix's installer puts in its folder (`%LOCALAPPDATA%\Programs\BENTRIX\libbentrix.dll` on Windows) and the binding finds there; `BENTRIX_FFI` (the file) or `BENTRIX_FFI_DIR` (its folder) names another. It runs for a computer signed in to Bentrix with Plus or Pro; with Free, connect to the running application as above.
+The package `Bentrix` (`Bentrix.Local` and the Gym's `TradingEnv`; from a clone, `src/Bentrix/Bentrix.csproj`) runs Bentrix's engine inside your program, with no window:
+
+```bash
+dotnet add package Bentrix
+```
+
+The engine is Bentrix's own library, `libbentrix`, which Bentrix's installer puts in its folder (`%LOCALAPPDATA%\Programs\BENTRIX\libbentrix.dll` on Windows) and the binding finds there; `BENTRIX_FFI` (the file) or `BENTRIX_FFI_DIR` (its folder) names another. It runs for a computer signed in to Bentrix with Plus or Pro; with Free, connect to the running application as above.
 
 ## Documentation
 
@@ -43,4 +51,4 @@ Every method, its arguments, the permission it needs and what it answers: **http
 
 ## Licence
 
-MIT — see [LICENSE](LICENSE). It covers this source code only: Bentrix's engine library (`libbentrix`) and the Bentrix application are Bentrix's own, under their own terms.
+MIT — see [LICENSE](https://github.com/bentrixhq/bentrix-dotnet/blob/main/LICENSE). It covers this source code only: Bentrix's engine library (`libbentrix`) and the Bentrix application are Bentrix's own, under their own terms.

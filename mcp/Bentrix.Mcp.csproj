@@ -12,4 +12,17 @@
     <InvariantGlobalization>true</InvariantGlobalization>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
+  <PropertyGroup>
+    <PackageId>Bentrix.Mcp</PackageId>
+    <Version>0.1.382</Version>
+    <Authors>Bentrix</Authors>
+    <Description>The .NET client of Bentrix: every capability of a running Bentrix over its MCP endpoint, generated from its capability catalogue.</Description>
+    <PackageProjectUrl>https://bentrix.net/en/docs/sdk/csharp/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/bentrixhq/bentrix-dotnet</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 </Project>

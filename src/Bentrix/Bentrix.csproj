@@ -11,4 +11,18 @@
     <AssemblyName>Bentrix</AssemblyName>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
+  <PropertyGroup>
+    <PackageId>Bentrix</PackageId>
+    <Version>0.1.382</Version>
+    <Authors>Bentrix</Authors>
+    <Description>Bentrix's engine in your own .NET process, and its Gym (Plus and Pro; the engine library is installed with Bentrix).</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://bentrix.net/en/docs/sdk/csharp/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/bentrixhq/bentrix-dotnet</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 </Project>
