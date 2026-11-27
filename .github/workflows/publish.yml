@@ -16,7 +16,6 @@ jobs:
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "8.0.x"
-      - run: dotnet pack mcp/Bentrix.Mcp.csproj -c Release -o out
       - run: dotnet pack src/Bentrix/Bentrix.csproj -c Release -o out
       - name: NuGet login (OIDC to a short-lived key)
         uses: NuGet/login@v1

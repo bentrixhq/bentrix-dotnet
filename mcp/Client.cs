@@ -1,10 +1,10 @@
-// The hand-written half of BENTRIX's C# MCP client: the connection and everything that does not change
+// The hand-written half of Bentrix's C# MCP client: the connection and everything that does not change
 // when a capability is added (Generated.cs is the rest, from the catalogue). It speaks MCP revision
 // 2026-07-28 over Streamable HTTP with .NET's own HttpClient: every request is its own POST carrying the
 // protocol version, the client's identity and its (empty) capabilities in _meta - the same wire as the
 // Python client's _runtime.py and the JavaScript client's client.js, field for field.
 //
-// BentrixClient.ConnectAsync() finds the running application through endpoint.json in BENTRIX's agents
+// BentrixClient.ConnectAsync() finds the running application through endpoint.json in Bentrix's agents
 // folder, pairs with it through local.secret under a name of this process, and connects with the token
 // it gets.
 
@@ -118,8 +118,8 @@ public sealed class Job
     }
 }
 
-/// <summary>One BENTRIX endpoint. Subclassed by the generated BentrixClient.</summary>
-public class Client : IDisposable
+/// <summary>One Bentrix endpoint. Subclassed by the generated BentrixClient.</summary>
+public class Client : IDisposable, IDoor
 {
     public const string ProtocolVersion = "2026-07-28";
     public const string ClientName = "bentrix-dotnet-sdk";
@@ -188,6 +188,7 @@ public class Client : IDisposable
     internal static string ExpandTemplate(string template, IDictionary<string, object?>? vars)
     {
         var values = (vars ?? new Dictionary<string, object?>()).Where(kv => kv.Value is not null).ToDictionary(kv => kv.Key, kv => kv.Value!);
+        FromAddress(values);
         return Regex.Replace(template, @"\{([?&]?)([^}]+)\}", m =>
         {
             var op = m.Groups[1].Value;
@@ -203,6 +204,27 @@ public class Client : IDisposable
             }
             return Uri.EscapeDataString(Scalar(one));
         });
+    }
+
+    /// <summary>
+    /// A workbench's address stands for its three parts: <c>bench</c> given as a
+    /// <c>bentrix://&lt;home&gt;/&lt;owner&gt;/bench/&lt;name&gt;</c> address fills <c>home</c>, <c>owner</c> and
+    /// <c>bench</c>. Parts given as before are left as they are.
+    /// </summary>
+    internal static void FromAddress(IDictionary<string, object> values)
+    {
+        if (!values.TryGetValue("bench", out var v) || v is not string s || !s.StartsWith("bentrix://", StringComparison.Ordinal))
+        {
+            return;
+        }
+        var parts = s.Substring("bentrix://".Length).Split('/');
+        if (parts.Length < 4 || parts[2] != "bench")
+        {
+            return;
+        }
+        values["home"] = parts[0];
+        values["owner"] = parts[1];
+        values["bench"] = parts[3];
     }
 
     /// <summary>One request, sent again while Bentrix answers busy (<see cref="Busy"/>): it ran nothing.</summary>
@@ -424,7 +446,7 @@ public static class Discovery
     public const string EndpointFile = "endpoint.json";
     public const string SecretFile = "local.secret";
 
-    /// <summary>The folder BENTRIX writes its endpoint and secret into - user_dir(Data, "agents"), as the application has it.</summary>
+    /// <summary>The folder Bentrix writes its endpoint and secret into - user_dir(Data, "agents"), as the application has it.</summary>
     public static string AgentsDir()
     {
         var lad = Environment.GetEnvironmentVariable("LOCALAPPDATA");

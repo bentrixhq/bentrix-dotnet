@@ -7,6 +7,6 @@
     <InvariantGlobalization>true</InvariantGlobalization>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../mcp/Bentrix.Mcp.csproj" />
+    <ProjectReference Include="../src/Bentrix/Bentrix.csproj" />
   </ItemGroup>
 </Project>

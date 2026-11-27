@@ -1,4 +1,4 @@
-// **The Gym, for .NET**: a client of BENTRIX's own environment (env_make, env_reset, env_step; the
+// **The Gym, for .NET**: a client of Bentrix's own environment (env_make, env_reset, env_step; the
 // environment is Rust's, crates/bentrix-shell/src/agenttools/env.rs), so its observations, actions,
 // rewards and episodes are the ones every language reaches - Python's bentrix.gym.TradingEnv's to the
 // bit. The contract is Gymnasium's: Reset(seed) -> (observation, info); Step(action) -> (observation,

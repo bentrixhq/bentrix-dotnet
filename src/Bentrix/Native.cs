@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace Bentrix;
 
-/// <summary>A refusal or a failure, in BENTRIX's own words.</summary>
+/// <summary>A refusal or a failure, in Bentrix's own words.</summary>
 public sealed class BentrixException : Exception
 {
     public BentrixException(string message) : base(message) { }
@@ -41,10 +41,32 @@ internal static class Native
         });
     }
 
+    /// <summary>**The engine's interface this package speaks** (<c>bx_abi</c>): a library of another one is refused before <c>bx_open</c>, in a sentence naming both.</summary>
+    internal const uint Abi = 2;
+
+    [DllImport(Lib)] private static extern uint bx_abi();
+
+    /// <summary>The interface the library speaks: its <c>bx_abi()</c>, or 1 for a library from before it (0.1.382).</summary>
+    internal static uint AbiOfTheLibrary()
+    {
+        try { return bx_abi(); }
+        catch (EntryPointNotFoundException) { return 1; }
+    }
+
+    /// <summary>Refused, in words, unless the library speaks <see cref="Abi"/>.</summary>
+    internal static void RefuseAnotherInterface()
+    {
+        var have = AbiOfTheLibrary();
+        if (have == Abi) return;
+        var built = Marshal.PtrToStringUTF8(bx_version()) ?? "?";
+        var update = have < Abi ? "update Bentrix" : "update this package";
+        throw new BentrixException($"Bentrix's engine library speaks interface {have} (Bentrix {built}) and this package speaks {Abi}: {update}.");
+    }
+
     [DllImport(Lib)] internal static extern IntPtr bx_version();
     [DllImport(Lib)] internal static extern IntPtr bx_last_error();
     [DllImport(Lib)] internal static extern void bx_free(IntPtr p);
-    [DllImport(Lib)] internal static extern IntPtr bx_open([MarshalAs(UnmanagedType.LPUTF8Str)] string? workspace, [MarshalAs(UnmanagedType.LPUTF8Str)] string? store);
+    [DllImport(Lib)] internal static extern IntPtr bx_open([MarshalAs(UnmanagedType.LPUTF8Str)] string? workspace, [MarshalAs(UnmanagedType.LPUTF8Str)] string? store, [MarshalAs(UnmanagedType.LPUTF8Str)] string? client);
     [DllImport(Lib)] internal static extern void bx_close(IntPtr s);
     [DllImport(Lib)] internal static extern IntPtr bx_call(IntPtr s, [MarshalAs(UnmanagedType.LPUTF8Str)] string tool, [MarshalAs(UnmanagedType.LPUTF8Str)] string? argsJson);
     [DllImport(Lib)] internal static extern IntPtr bx_read(IntPtr s, [MarshalAs(UnmanagedType.LPUTF8Str)] string resource, [MarshalAs(UnmanagedType.LPUTF8Str)] string? varsJson);

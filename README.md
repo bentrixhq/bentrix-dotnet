@@ -12,15 +12,15 @@ The .NET SDK 8 or later, and Bentrix open on the same computer.
 
 ## Install
 
-The client is the package `Bentrix.Mcp` on NuGet:
+Everything is the one package `Bentrix` on NuGet - the client of a running Bentrix and the engine in your own process:
 
 ```bash
 dotnet new console -o MyAgent
 cd MyAgent
-dotnet add package Bentrix.Mcp
+dotnet add package Bentrix
 ```
 
-Or from a clone of this repository, by reference: `dotnet add reference ../bentrix-dotnet/mcp/Bentrix.Mcp.csproj`.
+Or from a clone of this repository, by reference: `dotnet add reference ../bentrix-dotnet/src/Bentrix/Bentrix.csproj`.
 
 ## Connect
 
@@ -35,13 +35,19 @@ var book = await b.Trade.Book(p[0], p[1], p[3]);
 Console.WriteLine(book!["positions"]!.AsArray().Count);
 ```
 
+A workbench as one object: its orders, its book, its clock.
+
+```csharp
+var bench = await Bench.Open(b);
+var answer = await bench.Buy(0.1, sl: 2300.0);
+Console.WriteLine(answer.Ok ? answer.Outcome : answer.Reason);
+await bench.Step(interval: "H1");
+Console.WriteLine((await bench.Positions()).Count);
+```
+
 ## The engine in your own process
 
-The package `Bentrix` (`Bentrix.Local` and the Gym's `TradingEnv`; from a clone, `src/Bentrix/Bentrix.csproj`) runs Bentrix's engine inside your program, with no window:
-
-```bash
-dotnet add package Bentrix
-```
+The same package's `Bentrix.Local` and the Gym's `TradingEnv` run Bentrix's engine inside your program, with no window.
 
 The engine is Bentrix's own library, `libbentrix`, which Bentrix's installer puts in its folder (`%LOCALAPPDATA%\Programs\BENTRIX\libbentrix.dll` on Windows) and the binding finds there; `BENTRIX_FFI` (the file) or `BENTRIX_FFI_DIR` (its folder) names another. It runs for a computer signed in to Bentrix with Plus or Pro; with Free, connect to the running application as above.
 

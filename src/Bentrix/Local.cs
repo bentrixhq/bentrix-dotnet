@@ -1,4 +1,4 @@
-// **BENTRIX in your own .NET process**: an embedded session over a workspace and its recordings, the
+// **Bentrix in your own .NET process**: an embedded session over a workspace and its recordings, the
 // agents' own tools answered in-process by the same names and in the same shapes as over MCP - read,
 // laboratory and paper, never a real account (whose orders the person confirms in the window).
 
@@ -16,7 +16,8 @@ public sealed class Local : IDisposable
     /// A window or a --serve already on the workspace refuses it by name.</summary>
     public Local(string? workspace = null, string? store = null)
     {
-        _session = Native.bx_open(workspace, store);
+        Native.RefuseAnotherInterface();
+        _session = Native.bx_open(workspace, store, "C#");
         if (_session == IntPtr.Zero)
         {
             throw new BentrixException(Native.LastError());

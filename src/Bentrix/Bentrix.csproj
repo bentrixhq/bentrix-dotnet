@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <!-- **BENTRIX for .NET**: the engine in your own
-       process through the C ABI (crates/bentrix-ffi, libbentrix.dll / libbentrix.so beside it or on
-       the library path), its Gym a client of the Rust environment. -->
+  <!-- **Bentrix for .NET**, one package: the client of a running Bentrix (Bentrix.Mcp, ../../mcp: the
+       connection by hand, Generated.cs from the capability catalogue, Bench.cs from the Bench table) and the
+       engine in your own process through the C ABI (crates/bentrix-ffi, libbentrix.dll / libbentrix.so beside
+       it or on the library path), its Gym a client of the Rust environment. -->
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
@@ -10,13 +11,22 @@
     <RootNamespace>Bentrix</RootNamespace>
     <AssemblyName>Bentrix</AssemblyName>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>CS1591</NoWarn>
+    <!-- The generated client's XML comments name the catalogue's arguments and not CancellationToken: a warning, as
+         it was in the client's own project, never an error of the engine's. -->
+    <WarningsNotAsErrors>CS1570;CS1571;CS1572;CS1573;CS1574;CS1584;CS1587;CS1589</WarningsNotAsErrors>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../mcp/*.cs" />
+  </ItemGroup>
   <PropertyGroup>
     <PackageId>Bentrix</PackageId>
-    <Version>0.1.382</Version>
+    <Version>0.2.383</Version>
     <Authors>Bentrix</Authors>
-    <Description>Bentrix's engine in your own .NET process, and its Gym (Plus and Pro; the engine library is installed with Bentrix).</Description>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <Description>Bentrix for .NET: a workbench as one object - its orders, book, clock and state - over the Bentrix open on this computer (MCP, every capability of its catalogue) or the engine in your own process (Plus and Pro; the engine library is installed with Bentrix).</Description>
     <PackageProjectUrl>https://bentrix.net/en/docs/sdk/csharp/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/bentrixhq/bentrix-dotnet</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
